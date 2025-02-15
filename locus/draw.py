@@ -4,6 +4,31 @@ from manim import *
 import cv2
 import math
 
+
+def polygon_centroid(points):
+    """
+    计算封闭图形的质心
+    points: 边界点的数组 (x, y)
+    """
+    x = points[:, 0]
+    y = points[:, 1]
+    area = 0.0
+    cx = 0.0
+    cy = 0.0
+    n = len(points)
+
+    for i in range(n):
+        j = (i + 1) % n
+        cross = x[i] * y[j] - x[j] * y[i]
+        area += cross
+        cx += (x[i] + x[j]) * cross
+        cy += (y[i] + y[j]) * cross
+
+    area = area / 2.0
+    cx = cx / (6.0 * area)
+    cy = cy / (6.0 * area)
+    return cx, cy
+
 # 1. 读取图片
 image = cv2.imread('pi.png', cv2.IMREAD_GRAYSCALE)
 if image is None:
@@ -34,6 +59,12 @@ else:
 h, w = image.shape
 sampled_points = sampled_points - np.array([w/2, h/2])  # 平移坐标系至图像中心
 sampled_points[:, 1] = -sampled_points[:, 1]  # y轴向上
+
+cx, cy = polygon_centroid(sampled_points)
+
+# 将边界点平移，使质心位于(0,0)  如果轮廓不在图片中心取消下行代码注释
+# centered_points = sampled_points - np.array([cx, cy])
+
 
 # 7. 转为复数形式
 complex_points = sampled_points[:, 0] + 1j * sampled_points[:, 1]
