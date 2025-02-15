@@ -52,7 +52,7 @@ c_k = \frac{1}{N} \sum_{n=0}^{N-1} z_n e^{-i 2\pi k n / N}
 
 我们使用 `manim` 库进行可视化演示，生成以下视频：
 
-![DFT Visual](./video/pianime.mp4)
+![DFT Visual](./video/pi_anime.mp4)
 
 **可视化内容**：
 - 蓝色箭头：不同频率的旋转向量。
