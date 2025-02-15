@@ -59,7 +59,7 @@ else:
 h, w = image.shape
 sampled_points = sampled_points - np.array([w/2, h/2])  # 平移坐标系至图像中心
 sampled_points[:, 1] = -sampled_points[:, 1]  # y轴向上
-
+sampled_points = sampled_points / 20000     # 调整尺度
 cx, cy = polygon_centroid(sampled_points)
 
 # 将边界点平移，使质心位于(0,0)  如果轮廓不在图片中心取消下行代码注释
@@ -85,7 +85,8 @@ angular_frequencies = angular_frequencies[sorted_indices]
 #     print(f"频率索引: {i}, 角速度: {omega:.5f}, 系数: {coeff}")
 #     if i >= 60:
 #         break
-
+fourier_coeffs = fourier_coeffs[:60] 
+angular_frequencies = angular_frequencies[:60]
 # # 10. 可视化
 # plt.figure(figsize=(6, 6))
 # plt.imshow(edges, cmap='gray', extent=[-w/2, w/2, -h/2, h/2])
@@ -141,9 +142,7 @@ class Locus(Scene):
 
         self.add(plane, integer_axes)
 
-        sorted_indices = np.argsort(np.abs(fourier_coeffs))[::-1]
-        fourier_coeffs = fourier_coeffs[sorted_indices][:60] /20000     # 这里除以2w是因为原图太大了，生成的点都是几万的坐标
-        angular_frequencies = angular_frequencies[sorted_indices][:60]
+
         def trajectory(t):
             x, y = 0, 0
             for i in range(len(fourier_coeffs)):
