@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from manim import *
 import cv2
 import math
+from utils import read_image
 
 
 def polygon_centroid(points):
@@ -30,9 +31,7 @@ def polygon_centroid(points):
     return cx, cy
 
 # 1. 读取图片
-image = cv2.imread('pi.png', cv2.IMREAD_GRAYSCALE)
-if image is None:
-    raise FileNotFoundError("图片路径错误或图片不存在。")
+image = read_image('pi.png')
 
 # 2. 边缘检测
 image = cv2.GaussianBlur(image, (5,5), 0)
