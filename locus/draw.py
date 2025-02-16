@@ -3,32 +3,9 @@ import matplotlib.pyplot as plt
 from manim import *
 import cv2
 import math
-from utils import read_image
+from utils import read_image,polygon_centriod
 
 
-def polygon_centroid(points):
-    """
-    计算封闭图形的质心
-    points: 边界点的数组 (x, y)
-    """
-    x = points[:, 0]
-    y = points[:, 1]
-    area = 0.0
-    cx = 0.0
-    cy = 0.0
-    n = len(points)
-
-    for i in range(n):
-        j = (i + 1) % n
-        cross = x[i] * y[j] - x[j] * y[i]
-        area += cross
-        cx += (x[i] + x[j]) * cross
-        cy += (y[i] + y[j]) * cross
-
-    area = area / 2.0
-    cx = cx / (6.0 * area)
-    cy = cy / (6.0 * area)
-    return cx, cy
 
 # 1. 读取图片
 image = read_image('pi.png')
@@ -46,7 +23,7 @@ if len(contours) == 0:
 contour = max(contours, key=cv2.contourArea)
 contour_points = contour.squeeze()
 
-# 5. 采样60个点
+# 5. 采样N个点
 N = 512
 if len(contour_points) > N:
     indices = np.linspace(0, len(contour_points)-1, N, dtype=int)
@@ -59,9 +36,10 @@ h, w = image.shape
 sampled_points = sampled_points - np.array([w/2, h/2])  # 平移坐标系至图像中心
 sampled_points[:, 1] = -sampled_points[:, 1]  # y轴向上
 sampled_points = sampled_points / (min(h,w)*10)     # 调整尺度
-cx, cy = polygon_centroid(sampled_points)
 
-# 将边界点平移，使质心位于(0,0)  如果轮廓不在图片中心取消下行代码注释
+
+# 将边界点平移，使质心位于(0,0)  如果轮廓不在图片中心取消以下两行代码注释
+# cx, cy = polygon_centroid(sampled_points)
 # centered_points = sampled_points - np.array([cx, cy])
 
 
@@ -78,31 +56,32 @@ sorted_indices = np.argsort(np.abs(fourier_coeffs))[::-1]
 fourier_coeffs = fourier_coeffs[sorted_indices]
 angular_frequencies = angular_frequencies[sorted_indices]
 
+
+fourier_coeffs = fourier_coeffs[:60]    用 M 个圆来近似
+angular_frequencies = angular_frequencies[:60]
+
 # # 9. 打印傅里叶系数和对应的角速度
 # print("傅里叶级数（系数及对应角速度）：")
 # for i, (coeff, omega) in enumerate(zip(fourier_coeffs, angular_frequencies)):
-#     print(f"频率索引: {i}, 角速度: {omega:.5f}, 系数: {coeff}")
-#     if i >= 60:
-#         break
-fourier_coeffs = fourier_coeffs[:60] 
-angular_frequencies = angular_frequencies[:60]
+#     print(f"频率索引: {i}, 角速度: {omega:.13f}, 系数: {coeff}")
+
 # # 10. 可视化
 # plt.figure(figsize=(6, 6))
 # plt.imshow(edges, cmap='gray', extent=[-w/2, w/2, -h/2, h/2])
-# plt.plot(sampled_points[:, 0], sampled_points[:, 1], 'r.')
+# plt.plot(sampled_points[:, 0]*(min(h,w)*10), sampled_points[:, 1]*(min(h,w)*10), 'r.')
 # plt.title('Edge Points (60 samples) with Centered Coordinates')
 # plt.axhline(0, color='gray', linestyle='--')
 # plt.axvline(0, color='gray', linestyle='--')
 # plt.show()
 
 class Locus(Scene):
-    def construct(self, scale=10, fourier_coeffs=fourier_coeffs, angular_frequencies=angular_frequencies):
+    def construct(self, scale=15, fourier_coeffs=fourier_coeffs, angular_frequencies=angular_frequencies):
         # 缩放后的平面
         plane = NumberPlane(
-            x_range=[-7 * scale, 7 * scale, 1/8 * scale],
-            y_range=[-7 * scale, 7 * scale, 1/8 * scale],
-            x_length=14,
-            y_length=14,
+            x_range=[-8 * scale, 8 * scale, 1/8 * scale],
+            y_range=[-5 * scale, 5 * scale, 1/8 * scale],
+            x_length=16,
+            y_length=10,
             axis_config={
                 "color": WHITE,
                 "stroke_width": 3,
@@ -126,10 +105,10 @@ class Locus(Scene):
 
         # 加粗整数轴
         integer_axes = NumberPlane(
-            x_range=[-7 * scale, 7 * scale, 1 * scale],
-            y_range=[-7 * scale, 7 * scale, 1 * scale],
-            x_length=14,
-            y_length=14,
+            x_range=[-8 * scale, 8 * scale, 1 * scale],
+            y_range=[-5 * scale, 5 * scale, 1 * scale],
+            x_length=16,
+            y_length=10,
             background_line_style={
                 "stroke_color": GREY,
                 "stroke_width": 2,
@@ -140,7 +119,6 @@ class Locus(Scene):
         plane.axes.set_color(WHITE)
 
         self.add(plane, integer_axes)
-
 
         def trajectory(t):
             x, y = 0, 0
