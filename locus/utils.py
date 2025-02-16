@@ -29,4 +29,31 @@ def read_image(file_path):
         return image
     else:
         raise ValueError(f"Unsupported file format: {file_path}")
+
+
+def polygon_centroid(points):
+    """
+    计算封闭图形的质心
+    points: 边界点的数组 (x, y)
+    """
+    x = points[:, 0]
+    y = points[:, 1]
+    area = 0.0
+    cx = 0.0
+    cy = 0.0
+    n = len(points)
+
+    for i in range(n):
+        j = (i + 1) % n
+        cross = x[i] * y[j] - x[j] * y[i]
+        area += cross
+        cx += (x[i] + x[j]) * cross
+        cy += (y[i] + y[j]) * cross
+
+    area = area / 2.0
+    cx = cx / (6.0 * area)
+    cy = cy / (6.0 * area)
+    return cx, cy
+
+
     
