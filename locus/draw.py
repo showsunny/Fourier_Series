@@ -59,7 +59,7 @@ else:
 h, w = image.shape
 sampled_points = sampled_points - np.array([w/2, h/2])  # 平移坐标系至图像中心
 sampled_points[:, 1] = -sampled_points[:, 1]  # y轴向上
-sampled_points = sampled_points / 20000     # 调整尺度
+sampled_points = sampled_points / (min(h,w)*10)     # 调整尺度
 cx, cy = polygon_centroid(sampled_points)
 
 # 将边界点平移，使质心位于(0,0)  如果轮廓不在图片中心取消下行代码注释
