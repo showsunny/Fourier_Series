@@ -1,3 +1,6 @@
+<script type="text/javascript" async 
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 # 离散傅里叶变换 (DFT) 讲解与可视化
 
 ## 📖 目录
@@ -10,6 +13,16 @@
 
 ## 🧠 傅里叶变换的简介
 **傅里叶变换**是一种数学工具，用于将时域或空间域的信号分解为不同频率的正弦和余弦函数。
+
+$${\displaystyle F(f) = \int_{-\infty}^{+\infty}f(t)e^{-j 2\pi f t} dt}$$
+
+**离散形式**
+
+$$ X_{k} = \sum_{n=0}^{N-1} x_n \cdot e^{-j 2\pi\frac{k}{N} n} $$
+
+其中，
+
+$$ \{ \mathrm{x_n} \} :=x_0, x_1, \dots, x_{N-1}, \{ \mathrm{X_n} \} :=X_0, X_1, \dots, X_{N-1} $$
 
 对于二维平面上的封闭曲线，我们可以将其表示为一系列 **复数指数项**（即旋转向量，称为**傅里叶描述子**）：
 
