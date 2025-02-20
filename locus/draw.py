@@ -79,12 +79,12 @@ class Locus(Scene):
         # 缩放后的平面
         plane = NumberPlane(
             x_range=[-8 * scale, 8 * scale, 1/8 * scale],
-            y_range=[-5 * scale, 5 * scale, 1/8 * scale],
+            y_range=[-4 * scale, 4 * scale, 1/8 * scale],
             x_length=16,
-            y_length=10,
+            y_length=8,
             axis_config={
                 "color": WHITE,
-                "stroke_width": 3,
+                "stroke_width": 2,
             },
             background_line_style={
                 "stroke_color": GREY,
@@ -98,7 +98,7 @@ class Locus(Scene):
             },
             y_axis_config={
                 "include_numbers": True,
-                "numbers_to_include": range(-7 * scale, 8 * scale, 1 * scale),
+                "numbers_to_include": range(-4 * scale, 5 * scale, 1 * scale),
                 "decimal_number_config": {"num_decimal_places": 0},
             }
         )
@@ -106,9 +106,9 @@ class Locus(Scene):
         # 加粗整数轴
         integer_axes = NumberPlane(
             x_range=[-8 * scale, 8 * scale, 1 * scale],
-            y_range=[-5 * scale, 5 * scale, 1 * scale],
+            y_range=[-4 * scale, 4 * scale, 1 * scale],
             x_length=16,
-            y_length=10,
+            y_length=8,
             background_line_style={
                 "stroke_color": GREY,
                 "stroke_width": 2,
