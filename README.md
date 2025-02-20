@@ -49,7 +49,7 @@ $$ X_{k} = \sum_{n=0}^{N-1} x_n \cdot e^{-j 2\pi\frac{k}{N} n} $$
 
 其中，
 
-$$ \{ \mathrm{x_n} \} :=x_0, x_1, \dots, x_{N-1}, \{ \mathrm{X_n} \} :=X_0, X_1, \dots, X_{N-1} $$
+$$ \{ \mathrm{x_n} \} :=x_0, x_1, \dots, x_{N-1}, \{ \mathrm{X_k} \} :=X_0, X_1, \dots, X_{N-1} $$
 
 ## 🎨 如何将平面点转换为正余弦函数
 
