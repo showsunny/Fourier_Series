@@ -1,7 +1,7 @@
 import cv2
 import cairosvg
 import os
-
+import numpy as np
 
 
 def read_image(file_path):
@@ -55,5 +55,11 @@ def polygon_centroid(points):
     cy = cy / (6.0 * area)
     return cx, cy
 
+
+def dft(complex_points:np.ndarray[complex],N):
+    fourier_coeffs = np.fft.fft(complex_points)
+    frequencies = np.fft.fftfreq(N)
+    angular_frequencies = 2 * np.pi * frequencies
+    return fourier_coeffs,angular_frequencies
 
     
