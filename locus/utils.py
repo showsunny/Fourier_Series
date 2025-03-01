@@ -31,29 +31,17 @@ def read_image(file_path):
         raise ValueError(f"Unsupported file format: {file_path}")
 
 
-def polygon_centroid(points):
-    """
-    计算封闭图形的质心
-    points: 边界点的数组 (x, y)
-    """
-    x = points[:, 0]
-    y = points[:, 1]
-    area = 0.0
-    cx = 0.0
-    cy = 0.0
-    n = len(points)
+def dft(complex_points:np.ndarray[complex],N):
+    coefficients = np.fft.fft(complex_points, norm="forward")
+    frequencies = np.fft.fftfreq(len(complex_points), 1/len(complex_points))
+    indices = np.argsort(-abs(coefficients))[:N]
+    frequencies = frequencies[indices]
+    coefficients = coefficients[indices]
 
-    for i in range(n):
-        j = (i + 1) % n
-        cross = x[i] * y[j] - x[j] * y[i]
-        area += cross
-        cx += (x[i] + x[j]) * cross
-        cy += (y[i] + y[j]) * cross
-
-    area = area / 2.0
-    cx = cx / (6.0 * area)
-    cy = cy / (6.0 * area)
-    return cx, cy
+    # split complex numbers into modulus and argument
+    phases = np.angle(coefficients)
+    amplitudes = abs(coefficients)
+    return amplitudes, frequencies, phases
 
 
 def dft(complex_points:np.ndarray[complex],N):
